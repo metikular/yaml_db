@@ -1,5 +1,9 @@
 # YamlDb
 
+**This project is seeking new maintainers! Please see [#143](https://github.com/yamldb/yaml_db/issues/143).**
+
+---
+
 YamlDb is a database-independent format for dumping and restoring data.  It complements the database-independent schema format found in db/schema.rb.  The data is saved into db/data.yml.
 
 This can be used as a replacement for mysqldump or pg_dump, but only for the databases typically used by Rails apps.  Users, permissions, schemas, triggers, and other advanced database features are not supported - by design.
@@ -7,8 +11,6 @@ This can be used as a replacement for mysqldump or pg_dump, but only for the dat
 Any database that has an ActiveRecord adapter should work.
 
 This gem supports Rails versions 3.0 through 5.2.
-
-[![Build Status](https://travis-ci.org/yamldb/yaml_db.svg?branch=master)](https://travis-ci.org/yamldb/yaml_db)
 
 ## Installation
 
