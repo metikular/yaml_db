@@ -32,6 +32,10 @@ Further, there are tasks db:dump and db:load which do the entire database (the e
 
 In addition, we have plugins whereby you can export your database to/from various formats.  We only deal with yaml and csv right now, but you can easily write tools for your own formats (such as Excel or XML).  To use another format, just load setting the "class"  parameter to the class you are using.  This defaults to "YamlDb::Helper" which is a refactoring of the old yaml_db code.  We'll shorten this to use class nicknames in a little bit.
 
+If there are troubles with foreign keys, try not to truncate tables:
+
+    rake db:data:load[false]   ->   options: [truncate tables]
+
 ## Examples
 
 One common use would be to switch your data from one database backend to another.  For example, let's say you wanted to switch from SQLite to MySQL.  You might execute the following steps:
