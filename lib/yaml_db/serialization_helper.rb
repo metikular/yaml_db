@@ -32,9 +32,9 @@ module YamlDb
         end
       end
 
-      def load(filename, truncate = true)
+      def load(filename, truncate = true, no_foreign_keys = false)
         disable_logger
-        @loader.load(File.new(filename, "r"), truncate)
+        @loader.load(File.new(filename, "r"), truncate, no_foreign_keys)
         reenable_logger
       end
 
@@ -58,9 +58,9 @@ module YamlDb
     end
 
     class Load
-      def self.load(io, truncate = true)
+      def self.load(io, truncate = true, no_foreign_keys = false)
         ActiveRecord::Base.connection.transaction do
-          load_documents(io, truncate)
+          load_documents(io, truncate, no_foreign_keys)
         end
       end
 
@@ -72,16 +72,16 @@ module YamlDb
         end
       end
 
-      def self.load_table(table, data, truncate = true)
+      def self.load_table(table, data, truncate = true, no_foreign_keys = false)
         column_names = data['columns']
         if truncate
           truncate_table(table)
         end
-        load_records(table, column_names, data['records'])
+        load_records(table, column_names, data['records'], no_foreign_keys)
         reset_pk_sequence!(table)
       end
 
-      def self.load_records(table, column_names, records)
+      def self.load_records(table, column_names, records, no_foreign_keys)
         if column_names.nil?
           return
         end
@@ -89,7 +89,9 @@ module YamlDb
         quoted_table_name = Utils.quote_table(table)
         records.each do |record|
           quoted_values = record.map{|c| ActiveRecord::Base.connection.quote(c)}.join(',')
-          ActiveRecord::Base.connection.execute("INSERT INTO #{quoted_table_name} (#{quoted_column_names}) VALUES (#{quoted_values})")
+          deactivate_foreign_keys = no_foreign_keys ? "SET session_replication_role = 'replica';" : ""
+          activate_foreign_keys = no_foreign_keys ? "SET session_replication_role = 'origin';" : ""
+          ActiveRecord::Base.connection.execute("#{deactivate_foreign_keys} INSERT INTO #{quoted_table_name} (#{quoted_column_names}) VALUES (#{quoted_values}); SET session_replication_role = 'origin'; #{activate_foreign_keys}")
         end
       end
 

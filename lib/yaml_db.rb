@@ -57,11 +57,11 @@ module YamlDb
   end
 
   class Load < SerializationHelper::Load
-    def self.load_documents(io, truncate = true)
+    def self.load_documents(io, truncate = true, no_foreign_keys = false)
         YAML.load_stream(io) do |ydoc|
           ydoc.keys.each do |table_name|
             next if ydoc[table_name].nil?
-            load_table(table_name, ydoc[table_name], truncate)
+            load_table(table_name, ydoc[table_name], truncate, no_foreign_keys)
           end
         end
     end

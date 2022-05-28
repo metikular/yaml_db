@@ -34,7 +34,7 @@ In addition, we have plugins whereby you can export your database to/from variou
 
 If there are troubles with foreign keys, try not to truncate tables:
 
-    rake db:data:load[false]   ->   options: [truncate tables]
+    rake db:data:load[false,true]   ->   options: [truncate tables, deactivate foreign keys]
 
 ## Examples
 

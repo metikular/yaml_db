@@ -17,8 +17,8 @@ namespace :db do
     end
 
     desc "Load contents of db/data.extension (defaults to yaml) into database"
-    task :load, %i[truncate] => :environment do |_task, args|
-      YamlDb::RakeTasks.data_load_task(!(args[:truncate] == "false"))
+    task :load, %i[truncate deactivate_foreign_keys] => :environment do |_task, args|
+      YamlDb::RakeTasks.data_load_task(!(args[:truncate] == "false"), args[:deactivate_foreign_keys] == "true")
     end
 
     desc "Load contents of db/data_dir into database"

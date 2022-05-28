@@ -9,8 +9,8 @@ module YamlDb
       SerializationHelper::Base.new(helper).dump_to_dir(dump_dir("/#{dir}"))
     end
 
-    def self.data_load_task(truncate)
-      SerializationHelper::Base.new(helper).load(db_dump_data_file(helper.extension), truncate)
+    def self.data_load_task(truncate, no_foreign_keys)
+      SerializationHelper::Base.new(helper).load(db_dump_data_file(helper.extension), truncate, no_foreign_keys)
     end
 
     def self.data_load_dir_task
